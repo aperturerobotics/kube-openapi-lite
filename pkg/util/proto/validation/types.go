@@ -17,7 +17,7 @@ limitations under the License.
 package validation
 
 import (
-	"reflect"
+	"fmt"
 	"sort"
 
 	"k8s.io/kube-openapi/pkg/util/proto"
@@ -247,53 +247,41 @@ func itemFactory(path proto.Path, v interface{}) (validationItem, error) {
 	if v == nil {
 		return nil, InvalidObjectTypeError{Type: "nil", Path: path.String()}
 	}
-	kind := reflect.TypeOf(v).Kind()
-	switch kind {
-	case reflect.Bool:
+	switch value := v.(type) {
+	case bool:
 		return &primitiveItem{
 			baseItem: baseItem{path: path},
 			Value:    v,
 			Kind:     proto.Boolean,
 		}, nil
-	case reflect.Int,
-		reflect.Int8,
-		reflect.Int16,
-		reflect.Int32,
-		reflect.Int64,
-		reflect.Uint,
-		reflect.Uint8,
-		reflect.Uint16,
-		reflect.Uint32,
-		reflect.Uint64:
+	case int, int8, int16, int32, int64, uint, uint8, uint16, uint32, uint64:
 		return &primitiveItem{
 			baseItem: baseItem{path: path},
 			Value:    v,
 			Kind:     proto.Integer,
 		}, nil
-	case reflect.Float32,
-		reflect.Float64:
+	case float32, float64:
 		return &primitiveItem{
 			baseItem: baseItem{path: path},
 			Value:    v,
 			Kind:     proto.Number,
 		}, nil
-	case reflect.String:
+	case string:
 		return &primitiveItem{
 			baseItem: baseItem{path: path},
 			Value:    v,
 			Kind:     proto.String,
 		}, nil
-	case reflect.Array,
-		reflect.Slice:
+	case []interface{}:
 		return &arrayItem{
 			baseItem: baseItem{path: path},
-			Array:    v.([]interface{}),
+			Array:    value,
 		}, nil
-	case reflect.Map:
+	case map[string]interface{}:
 		return &mapItem{
 			baseItem: baseItem{path: path},
-			Map:      v.(map[string]interface{}),
+			Map:      value,
 		}, nil
 	}
-	return nil, InvalidObjectTypeError{Type: kind.String(), Path: path.String()}
+	return nil, InvalidObjectTypeError{Type: fmt.Sprintf("%T", v), Path: path.String()}
 }

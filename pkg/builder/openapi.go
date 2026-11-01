@@ -35,10 +35,9 @@ const (
 )
 
 type openAPI struct {
-	config       *common.Config
-	swagger      *spec.Swagger
-	protocolList []string
-	definitions  map[string]common.OpenAPIDefinition
+	config      *common.Config
+	swagger     *spec.Swagger
+	definitions map[string]common.OpenAPIDefinition
 }
 
 // BuildOpenAPISpec builds OpenAPI spec given a list of route containers and common.Config to customize it.

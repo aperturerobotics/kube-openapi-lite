@@ -1,18 +1,17 @@
-# Kube OpenAPI
+# Kube OpenAPI lite
 
-This repo is the home for Kubernetes OpenAPI discovery spec generation. The goal 
-is to support a subset of OpenAPI features to satisfy kubernetes use-cases but 
-implement that subset with little to no assumption about the structure of the 
-code or routes. Thus, there should be no kubernetes specific code in this repo. 
+This fork retains the upstream module path `k8s.io/kube-openapi`.
+It keeps the OpenAPI v2 and v3 schema models, builders, HTTP handlers, caching,
+schema conversion and mutation, REST adapters, and document validation visitors.
+Its gnostic dependency uses protobuf-go-lite. Schema reference wrapping and
+JSON/YAML value dispatch do not use reflection.
 
+The schema generators, validation engine, format validators, aggregator,
+conversion command, integration programs, test helper packages, scripts and
+upstream automation are omitted. Tests requiring those helper packages are
+omitted too; the retained handler fixture supports the HTTP/protobuf tests.
 
-There are two main parts: 
- - A model generator that goes through .go files, find and generate model 
-definitions. 
- - The spec generator that is responsible for dynamically generating 
-the final OpenAPI spec using web service routes or combining other 
-OpenAPI/Json specs.
-
-## Contributing
-
-Please see [CONTRIBUTING.md](CONTRIBUTING.md) for instructions on how to contribute.
+Generic Go model naming still uses reflection. Standard JSON, YAML, HTTP and
+logging dependencies retain their own reflection and platform-specific unsafe
+implementation details. This is a focused subset rather than a replacement for
+every upstream package.

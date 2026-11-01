@@ -18,7 +18,6 @@ package proto
 
 import (
 	"fmt"
-	"reflect"
 	"strings"
 
 	openapi_v3 "github.com/google/gnostic-models/openapiv3"
@@ -259,7 +258,7 @@ func (d *Definitions) parseV3Map(s *openapi_v3.Schema, path *Path) (Schema, erro
 		// no subtype?
 		sub = &Arbitrary{}
 	default:
-		panic("unrecognized type " + reflect.TypeOf(p).Name())
+		panic(fmt.Sprintf("unrecognized type %T", p))
 	}
 
 	base, err := d.parseV3BaseSchema(s, path)

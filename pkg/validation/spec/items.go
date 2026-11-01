@@ -21,10 +21,6 @@ import (
 	"k8s.io/kube-openapi/pkg/internal"
 )
 
-const (
-	jsonRef = "$ref"
-)
-
 // SimpleSchema describe swagger simple schemas for parameters and headers
 type SimpleSchema struct {
 	Type             string      `json:"type,omitempty"`

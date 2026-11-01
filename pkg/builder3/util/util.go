@@ -17,8 +17,6 @@ limitations under the License.
 package util
 
 import (
-	"reflect"
-
 	"k8s.io/kube-openapi/pkg/schemamutation"
 	"k8s.io/kube-openapi/pkg/validation/spec"
 )
@@ -29,23 +27,62 @@ import (
 func WrapRefs(schema *spec.Schema) *spec.Schema {
 	walker := schemamutation.Walker{
 		SchemaCallback: func(schema *spec.Schema) *spec.Schema {
-			orig := schema
-			clone := func() {
-				if orig == schema {
-					schema = new(spec.Schema)
-					*schema = *orig
-				}
+			// Leave inline schemas and bare references unchanged.
+			if schema.Ref.String() == "" || !hasRefSiblings(schema) {
+				return schema
 			}
-			if schema.Ref.String() != "" && !reflect.DeepEqual(*schema, spec.Schema{SchemaProps: spec.SchemaProps{Ref: schema.Ref}}) {
-				clone()
-				refSchema := new(spec.Schema)
-				refSchema.Ref = schema.Ref
-				schema.Ref = spec.Ref{}
-				schema.AllOf = []spec.Schema{*refSchema}
-			}
-			return schema
+
+			// Preserve the caller's schema while moving its reference into AllOf.
+			wrapped := *schema
+			wrapped.Ref = spec.Ref{}
+			wrapped.AllOf = []spec.Schema{{SchemaProps: spec.SchemaProps{Ref: schema.Ref}}}
+			return &wrapped
 		},
 		RefCallback: schemamutation.RefCallbackNoop,
 	}
 	return walker.WalkSchema(schema)
+}
+
+// hasRefSiblings reports fields other than Ref, including explicitly empty collections.
+func hasRefSiblings(schema *spec.Schema) bool {
+	return schema.ID != "" ||
+		schema.Schema != "" ||
+		schema.Description != "" ||
+		schema.Type != nil ||
+		schema.Nullable ||
+		schema.Format != "" ||
+		schema.Title != "" ||
+		schema.Default != nil ||
+		schema.Maximum != nil ||
+		schema.ExclusiveMaximum ||
+		schema.Minimum != nil ||
+		schema.ExclusiveMinimum ||
+		schema.MaxLength != nil ||
+		schema.MinLength != nil ||
+		schema.Pattern != "" ||
+		schema.MaxItems != nil ||
+		schema.MinItems != nil ||
+		schema.UniqueItems ||
+		schema.MultipleOf != nil ||
+		schema.Enum != nil ||
+		schema.MaxProperties != nil ||
+		schema.MinProperties != nil ||
+		schema.Required != nil ||
+		schema.Items != nil ||
+		schema.AllOf != nil ||
+		schema.OneOf != nil ||
+		schema.AnyOf != nil ||
+		schema.Not != nil ||
+		schema.Properties != nil ||
+		schema.AdditionalProperties != nil ||
+		schema.PatternProperties != nil ||
+		schema.Dependencies != nil ||
+		schema.AdditionalItems != nil ||
+		schema.Definitions != nil ||
+		schema.Discriminator != "" ||
+		schema.ReadOnly ||
+		schema.ExternalDocs != nil ||
+		schema.Example != nil ||
+		schema.Extensions != nil ||
+		schema.ExtraProps != nil
 }
