@@ -21,7 +21,8 @@ import (
 	"k8s.io/kube-openapi/pkg/validation/spec"
 )
 
-// wrapRefs wraps OpenAPI V3 Schema refs that contain sibling elements.
+// WrapRefs wraps OpenAPI V3 Schema refs that contain sibling elements.
+//
 // AllOf is used to wrap the Ref to prevent references from having sibling elements
 // Please see https://github.com/kubernetes/kubernetes/issues/106387#issuecomment-967640388
 func WrapRefs(schema *spec.Schema) *spec.Schema {
