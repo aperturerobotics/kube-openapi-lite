@@ -7,9 +7,10 @@ Its gnostic dependency uses protobuf-go-lite. Schema reference wrapping and
 JSON/YAML value dispatch do not use reflection.
 
 The schema generators, validation engine, format validators, aggregator,
-conversion command, integration programs, test helper packages, scripts and
-upstream automation are omitted. Tests requiring those helper packages are
-omitted too; the retained handler fixture supports the HTTP/protobuf tests.
+conversion command, integration programs, scripts and upstream automation are
+omitted. The proto/testing helpers remain solely to support dependency tests
+and module tidying. Other test helper packages are omitted; the retained handler
+fixture supports the HTTP/protobuf tests.
 
 Generic Go model naming still uses reflection. Standard JSON, YAML, HTTP and
 logging dependencies retain their own reflection and platform-specific unsafe
