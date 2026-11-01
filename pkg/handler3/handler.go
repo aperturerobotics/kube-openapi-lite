@@ -32,7 +32,6 @@ import (
 	openapi_v3 "github.com/google/gnostic-models/openapiv3"
 	"github.com/google/uuid"
 	"github.com/munnerz/goautoneg"
-	"google.golang.org/protobuf/proto"
 
 	"k8s.io/klog/v2"
 	"k8s.io/kube-openapi/pkg/cached"
@@ -64,7 +63,7 @@ func ToV3ProtoBinary(json []byte) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	return proto.Marshal(document)
+	return document.MarshalVT()
 }
 
 type timedSpec struct {

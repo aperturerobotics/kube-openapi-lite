@@ -28,7 +28,6 @@ import (
 	openapi_v2 "github.com/google/gnostic-models/openapiv2"
 	"github.com/google/uuid"
 	"github.com/munnerz/goautoneg"
-	"google.golang.org/protobuf/proto"
 
 	klog "k8s.io/klog/v2"
 	"k8s.io/kube-openapi/pkg/builder"
@@ -113,7 +112,7 @@ func ToProtoBinary(json []byte) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	return proto.Marshal(document)
+	return document.MarshalVT()
 }
 
 // RegisterOpenAPIVersionedService registers a handler to provide access to provided swagger spec.

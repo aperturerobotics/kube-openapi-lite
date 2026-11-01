@@ -29,7 +29,6 @@ import (
 	"github.com/google/go-cmp/cmp"
 	"github.com/stretchr/testify/require"
 	"go.yaml.in/yaml/v3"
-	"google.golang.org/protobuf/proto"
 	jsontesting "k8s.io/kube-openapi/pkg/util/jsontesting"
 	. "k8s.io/kube-openapi/pkg/validation/spec"
 	"sigs.k8s.io/randfill"
@@ -263,7 +262,7 @@ func BenchmarkGnosticConversion(b *testing.B) {
 	var encodedProto []byte
 	b.Run("gnostic->pb", func(b2 *testing.B) {
 		for i := 0; i < b2.N; i++ {
-			encodedProto, err = proto.Marshal(originalGnostic)
+			encodedProto, err = originalGnostic.MarshalVT()
 			if err != nil {
 				b2.Fatal(err)
 			}
@@ -274,7 +273,7 @@ func BenchmarkGnosticConversion(b *testing.B) {
 	var backToGnostic openapi_v2.Document
 	b.Run("pb->gnostic", func(b2 *testing.B) {
 		for i := 0; i < b2.N; i++ {
-			if err := proto.Unmarshal(encodedProto, &backToGnostic); err != nil {
+			if err := backToGnostic.UnmarshalVT(encodedProto); err != nil {
 				b2.Fatal(err)
 			}
 		}

@@ -17,7 +17,6 @@ require (
 	go.yaml.in/yaml/v3 v3.0.5
 	golang.org/x/tools v0.42.0
 	golang.org/x/tools/go/packages/packagestest v0.1.1-deprecated
-	google.golang.org/protobuf v1.35.1
 	k8s.io/gengo/v2 v2.0.0-20250922181213-ec3ebc5fd46b
 	k8s.io/klog/v2 v2.140.0
 	k8s.io/utils v0.0.0-20260210185600-b8788abfbbc2
@@ -28,6 +27,8 @@ require (
 )
 
 require (
+	github.com/aperturerobotics/json-iterator-lite v1.1.0 // indirect
+	github.com/aperturerobotics/protobuf-go-lite v0.19.1-0.20261028131920-f644656fc4a7 // indirect
 	github.com/go-logr/logr v1.4.2 // indirect
 	github.com/go-openapi/jsonpointer v1.0.0 // indirect
 	github.com/go-openapi/swag/pools v0.27.1 // indirect
@@ -36,3 +37,5 @@ require (
 	golang.org/x/sync v0.19.0 // indirect
 	golang.org/x/tools/go/expect v0.1.0-deprecated // indirect
 )
+
+replace github.com/google/gnostic-models => github.com/aperturerobotics/gnostic-models-lite v0.0.0-20261101172338-f2740e98f265
